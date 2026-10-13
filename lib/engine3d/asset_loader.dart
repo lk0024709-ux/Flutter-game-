@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'gltf_loader.dart';
 import 'procedural_meshes.dart';
 import 'texture_loader.dart';
@@ -70,7 +68,7 @@ class AssetSlot {
 /// engine does with it, and the arena falls back to flat colours when the file
 /// is absent.
 class TextureSlot {
-  const TextureSlot({
+  TextureSlot({
     required this.id,
     required this.label,
     required this.path,
@@ -224,7 +222,7 @@ class AssetLoader {
     if (_textureSlots.isNotEmpty) {
       return;
     }
-    _textureSlots.addAll(const <TextureSlot>[
+    _textureSlots.addAll(<TextureSlot>[
       TextureSlot(
         id: 'arena_floor',
         label: 'Paving stones',

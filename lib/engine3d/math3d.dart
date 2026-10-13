@@ -12,7 +12,7 @@ class Math3d {
   const Math3d._();
 
   /// Axis-aligned box in model space, used to scale and centre loaded models.
-  static const Bounds3 emptyBounds = Bounds3._empty();
+  static final Bounds3 emptyBounds = Bounds3._empty();
 
   /// Linear interpolation that also accepts an extrapolation-free factor.
   static double lerp(double a, double b, double t) => a + (b - a) * t;
@@ -41,11 +41,11 @@ class Math3d {
 
 /// Immutable model-space bounding box.
 class Bounds3 {
-  const Bounds3(this.min, this.max);
+  Bounds3(this.min, this.max);
 
-  const Bounds3._empty()
-      : min = const Vector3(0, 0, 0),
-        max = const Vector3(0, 0, 0);
+  Bounds3._empty()
+      : min = Vector3.zero(),
+        max = Vector3.zero();
 
   final Vector3 min;
   final Vector3 max;

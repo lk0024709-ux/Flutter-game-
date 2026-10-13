@@ -115,7 +115,7 @@ class GltfLoader {
   }) async {
     try {
       final ByteData data = await rootBundle.load(assetPath);
-      return loadBytes(
+      return await loadBytes(
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
         assetPath: assetPath,
         name: name ?? assetPath.split('/').last.replaceAll('.glb', ''),
@@ -428,6 +428,32 @@ class _Document {
     );
   }
 
+  /// Scratch vector reused while transforming whole vertex arrays.
+  final Vector3 _scratch = Vector3.zero();
+
+  /// Applies a full affine transform to a point (w = 1).
+  ///
+  /// Written out against `Matrix4.storage` instead of the vector_math helpers so
+  /// the maths is explicit and does not depend on a particular helper name.
+  static void _applyPoint(Matrix4 m, double x, double y, double z, Vector3 out) {
+    final List<double> s = m.storage;
+    out.setValues(
+      s[0] * x + s[4] * y + s[8] * z + s[12],
+      s[1] * x + s[5] * y + s[9] * z + s[13],
+      s[2] * x + s[6] * y + s[10] * z + s[14],
+    );
+  }
+
+  /// Applies the rotational part of a transform to a direction (w = 0).
+  static void _applyDirection(Matrix4 m, double x, double y, double z, Vector3 out) {
+    final List<double> s = m.storage;
+    out.setValues(
+      s[0] * x + s[4] * y + s[8] * z,
+      s[1] * x + s[5] * y + s[9] * z,
+      s[2] * x + s[6] * y + s[10] * z,
+    );
+  }
+
   static List<double> _vec3(Object? value, double dx, double dy, double dz) {
     if (value is List && value.length >= 3) {
       return <double>[
@@ -462,7 +488,7 @@ class _Document {
   }
 
   /// Reads one accessor as interleaved doubles.
-  Float32List _readAccessor(int accessorIndex, int components, {bool dropFourth = false}) {
+  Float32List _readAccessor(int accessorIndex, int components) {
     if (accessorIndex < 0 || accessorIndex >= _accessors.length) {
       return Float32List(0);
     }
@@ -565,27 +591,37 @@ class _Document {
     final Float32List positions = Float32List(verts * 3);
     final Float32List normals = Float32List(verts * 3);
     for (int i = 0; i < verts; i++) {
-      final Vector3 p = Vector3(rawPositions[i * 3], rawPositions[i * 3 + 1], rawPositions[i * 3 + 2]);
-      transform.applyToVector3(p);
-      positions[i * 3] = p.x;
-      positions[i * 3 + 1] = p.y;
-      positions[i * 3 + 2] = p.z;
+      _applyPoint(
+        transform,
+        rawPositions[i * 3],
+        rawPositions[i * 3 + 1],
+        rawPositions[i * 3 + 2],
+        _scratch,
+      );
+      positions[i * 3] = _scratch.x;
+      positions[i * 3 + 1] = _scratch.y;
+      positions[i * 3 + 2] = _scratch.z;
     }
 
     final Object? normalIndex = attributes['NORMAL'];
     if (normalIndex is int) {
       final Float32List raw = _readAccessor(normalIndex, 3);
       for (int i = 0; i < verts && i * 3 + 2 < raw.length; i++) {
-        final Vector3 n = Vector3(raw[i * 3], raw[i * 3 + 1], raw[i * 3 + 2]);
-        normalMatrix.applyToVector3(n);
-        if (n.length2 > 0.000001) {
-          n.normalize();
+        _applyDirection(
+          normalMatrix,
+          raw[i * 3],
+          raw[i * 3 + 1],
+          raw[i * 3 + 2],
+          _scratch,
+        );
+        if (_scratch.length2 > 0.000001) {
+          _scratch.normalize();
         } else {
-          n.setValues(0, 1, 0);
+          _scratch.setValues(0, 1, 0);
         }
-        normals[i * 3] = n.x;
-        normals[i * 3 + 1] = n.y;
-        normals[i * 3 + 2] = n.z;
+        normals[i * 3] = _scratch.x;
+        normals[i * 3 + 1] = _scratch.y;
+        normals[i * 3 + 2] = _scratch.z;
       }
     } else {
       for (int i = 0; i < verts; i++) {

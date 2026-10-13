@@ -46,7 +46,7 @@ void main() {
     });
 
     test('bounds normalise models to a target height', () {
-      const Bounds3 bounds = Bounds3(
+      final Bounds3 bounds = Bounds3(
         Vector3(-1, 0, -1),
         Vector3(1, 4, 1),
       );
@@ -242,7 +242,7 @@ void main() {
     test('projects in front of the camera and rejects what is behind it', () {
       final CameraController3D camera = CameraController3D(distance: 12, focus: Vector3.zero());
       camera.updateViewport(400, 800);
-      final Offset? centre = camera.project(Vector3.zero());
+      final ui.Offset? centre = camera.project(Vector3.zero());
       expect(centre, isNotNull);
       expect(centre!.dx, closeTo(200, 1));
       expect(camera.depthOf(Vector3.zero()), greaterThan(0));
@@ -315,8 +315,8 @@ void main() {
         MeshInstance(model: ProceduralMeshes.block(), visible: false),
       ];
       final ui.PictureRecorder recorder = ui.PictureRecorder();
-      final Canvas canvas = Canvas(recorder);
-      renderer.render(canvas, const Size(360, 640), camera, instances);
+      final ui.Canvas canvas = ui.Canvas(recorder);
+      renderer.render(canvas, const ui.Size(360, 640), camera, instances);
       final ui.Picture picture = recorder.endRecording();
       picture.dispose();
 
@@ -330,8 +330,8 @@ void main() {
       final Renderer3D renderer = Renderer3D();
       final ui.PictureRecorder recorder = ui.PictureRecorder();
       renderer.render(
-        Canvas(recorder),
-        const Size(320, 480),
+        ui.Canvas(recorder),
+        const ui.Size(320, 480),
         camera,
         const <MeshInstance>[],
       );
@@ -377,7 +377,7 @@ void main() {
       scene.camera.distance = 14;
 
       final ui.PictureRecorder recorder = ui.PictureRecorder();
-      scene.render(Canvas(recorder), const Size(400, 700));
+      scene.render(ui.Canvas(recorder), const ui.Size(400, 700));
       recorder.endRecording().dispose();
       expect(scene.renderer.lastInstanceCount, greaterThan(5));
       expect(scene.renderer.lastTriangleCount, greaterThan(0));
