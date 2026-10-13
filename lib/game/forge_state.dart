@@ -21,7 +21,7 @@ class ForgeState extends ChangeNotifier {
     return weapons.first;
   }
   Duration get forgeInterval => Duration(milliseconds:
-      (5000 - (totalMerges ~/ 10) * 300).clamp(1500, 5000));
+      (5000 - (totalMerges ~/ 10) * 300).clamp(1500, 5000).toInt());
 
   Future<void> load() async {
     if (_loaded) return;
@@ -32,7 +32,7 @@ class ForgeState extends ChangeNotifier {
         final decoded = (jsonDecode(raw) as List).cast<int?>();
         for (var i = 0; i < capacity && i < decoded.length; i++) {
           final value = decoded[i];
-          slots[i] = value == null ? null : WeaponTier.values[value.clamp(0, 5)];
+          slots[i] = value == null ? null : WeaponTier.values[value.clamp(0, 5).toInt()];
         }
         totalMerges = prefs.getInt('forge.merges') ?? 0;
         final savedAt = prefs.getInt('forge.savedAt') ?? DateTime.now().millisecondsSinceEpoch;
