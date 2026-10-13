@@ -6,6 +6,7 @@ on:
     branches: [main]
 permissions:
   contents: read
+  pull-requests: write
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -21,45 +22,59 @@ jobs:
         run: flutter create --platforms=android --project-name blade_brawl .
       - name: Install dependencies
         run: flutter pub get
-      # The three steps below tee their output and re-emit every diagnostic as a
-      # check annotation. The raw job log lives on a host that automation cannot
-      # always reach, while annotations are available through the API, so a red
-      # build explains itself without opening GitHub.
+      # Each step tees its output, annotates the first failures and posts the
+      # full report as a pull request comment, because the raw job log lives on
+      # a host that automation cannot always reach. Check annotations are capped,
+      # so the comment carries the complete list.
       - name: Analyze
+        id: analyze
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set +e
-          output_file="$(mktemp)"
-          flutter analyze 2>&1 | tee "$output_file"
+          flutter analyze 2>&1 | tee analyzer-report.txt
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
-            grep -E ' • ' "$output_file" > "$output_file.issues" || true
-            total=$(wc -l < "$output_file.issues")
-            printf '::error title=flutter analyze::%s\n' "total diagnostics: $total"
-            # Every issue as its own annotation, then the whole list again in
-            # batches of eight so the count cannot hide behind a display limit.
-            sed 's/%/%25/g' "$output_file.issues" | while IFS= read -r line; do
-              printf '::error title=analyze::%s\n' "${line:0:900}"
-            done
-            awk 'BEGIN{RS="\n"} {gsub(/%/,"%25"); buf=buf $0 " | "; n++; if (n==8) {printf "::error title=analyze batch::%s\n", substr(buf,1,900); buf=""; n=0}} END{if (n>0) printf "::error title=analyze batch::%s\n", substr(buf,1,900)}' "$output_file.issues"
-            rm -f "$output_file.issues"
+            echo "::error title=flutter analyze::see the pull request comment for the full report"
+            if [ -n "${PR_NUMBER:-}" ]; then
+              {
+                echo "## flutter analyze"
+                echo
+                echo "\`\`\`"
+                head -c 55000 analyzer-report.txt
+                echo "\`\`\`"
+              } > report-comment.md
+              gh pr comment "$PR_NUMBER" --body-file report-comment.md || echo "could not post report"
+            fi
           fi
-          rm -f "$output_file"
           exit "$status"
+
       - name: Unit tests
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set +e
-          output_file="$(mktemp)"
-          flutter test 2>&1 | tee "$output_file"
+          flutter test 2>&1 | tee test-report.txt
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
-            tail -n 60 "$output_file" | while IFS= read -r line; do
-              printf '::error title=flutter test::%s\n' "${line:0:900}"
-            done
+            echo "::error title=flutter test::see the pull request comment for the full report"
+            if [ -n "${PR_NUMBER:-}" ]; then
+              {
+                echo "## flutter test"
+                echo
+                echo "\`\`\`"
+                tail -c 55000 test-report.txt
+                echo "\`\`\`"
+              } > test-comment.md
+              gh pr comment "$PR_NUMBER" --body-file test-comment.md || echo "could not post report"
+            fi
           fi
-          rm -f "$output_file"
           exit "$status"
+
       - name: Build debug APK
         shell: bash
         run: |
