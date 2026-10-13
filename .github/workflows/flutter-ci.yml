@@ -17,6 +17,8 @@ jobs:
         with:
           channel: stable
           cache: true
+      - name: Generate missing Android runner files
+        run: flutter create --platforms=android --project-name blade_brawl .
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze
