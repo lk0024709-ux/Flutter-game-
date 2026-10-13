@@ -73,7 +73,7 @@ class EliteScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Eyebrow('Elite mode · dark trial', color: AppColors.darkMuted),
+              const Eyebrow('Elite mode · dark trial', color: AppColors.darkMuted),
               Text('The Chimera Trials', style: Theme.of(context).textTheme.titleLarge),
             ],
           ),
@@ -125,7 +125,7 @@ class EliteScreen extends StatelessWidget {
             children: [
               _DarkStat(label: 'BOSSES', value: '${state.eliteWins}/7'),
               const SizedBox(width: 9),
-              _DarkStat(label: 'PLAYER HP', value: '2×'),
+              const _DarkStat(label: 'PLAYER HP', value: '2×'),
               const SizedBox(width: 9),
               _DarkStat(label: 'REVIVES', value: '2'),
             ],

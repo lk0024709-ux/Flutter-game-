@@ -104,7 +104,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                   children: [
                     const Eyebrow('Your saga'),
                     const SizedBox(height: 4),
-                    Text('${cleared}/350 trials cleared', style: Theme.of(context).textTheme.titleMedium),
+                    Text('$cleared/350 trials cleared', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 4),
                     Text('${widget.state.campaignWins} victories · ${widget.state.totalMerges} forge merges', style: Theme.of(context).textTheme.bodySmall),
                   ],
@@ -211,7 +211,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
         final level = GameLevel(rank: _selectedRank, levelInRank: index + 1);
         final unlocked = widget.state.isLevelUnlocked(level);
         final gradeScore = widget.state.bestGradeScore(level.globalLevel) ?? 0;
-        final grade = gradeScore <= 0 ? LevelGrade.none : LevelGrade.values[gradeScore.clamp(0, LevelGrade.values.length - 1) as int];
+        final grade = gradeScore <= 0 ? LevelGrade.none : LevelGrade.values[gradeScore.clamp(0, LevelGrade.values.length - 1)];
         final current = unlocked && level.globalLevel == widget.state.highestClearedLevel + 1;
         return _LevelTile(
           level: level,
@@ -238,10 +238,10 @@ class _CampaignScreenState extends State<CampaignScreen> {
   }
 
   Widget _buildLegend() {
-    return Wrap(
+    return const Wrap(
       spacing: 14,
       runSpacing: 8,
-      children: const [
+      children: [
         _LegendItem(icon: Icons.circle, color: AppColors.primary, label: 'Current'),
         _LegendItem(icon: Icons.star_rounded, color: AppColors.primaryDark, label: 'Mini-boss'),
         _LegendItem(icon: Icons.workspace_premium_rounded, color: Color(0xFF9B742A), label: 'Rank boss'),

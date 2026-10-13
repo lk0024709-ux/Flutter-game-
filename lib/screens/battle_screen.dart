@@ -759,7 +759,7 @@ class _VirtualJoystickState extends State<VirtualJoystick> {
 
   void _update(Offset localPosition) {
     const size = 158.0;
-    final center = const Offset(size / 2, size / 2);
+    const center = Offset(size / 2, size / 2);
     final delta = localPosition - center;
     final normalized = delta.distance <= size * 0.34 ? delta : delta / delta.distance * (size * 0.34);
     setState(() => _value = normalized / (size * 0.34));

@@ -1119,7 +1119,7 @@ class BattleGame extends FlameGame {
     if (rank == Rank.platinum || rank == Rank.grandMasters) {
       for (var i = 0; i < 4; i++) {
         final x = 300 + i * 490 + math.sin(_elapsed * 0.35 + i) * 32;
-        final y = 410 + (i % 2) * 620;
+        final y = (410 + (i % 2) * 620).toDouble();
         canvas.drawRRect(
           RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(x, y), width: 46.0, height: 175.0), const Radius.circular(13)),
           Paint()..color = const Color(0xFF526D58).withValues(alpha: 0.47),
