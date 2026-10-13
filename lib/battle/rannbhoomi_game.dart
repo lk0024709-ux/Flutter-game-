@@ -26,7 +26,7 @@ abstract class Fighter extends PositionComponent with HasGameReference<Rannbhoom
 }
 class Warrior extends Fighter{
  Warrior():super(health:120,maxHealth:120,radius:18,tint:const Color(0xFFB45309));
- @override void update(double dt){super.update(dt);if(game.finished)return;if(game.move.distance>.05){position+=Vector2(game.move.dx,game.move.dy)*220*dt;facing=math.atan2(game.move.dy,game.move.dx);}position.x=position.x.clamp(20,2380);position.y=position.y.clamp(20,2380);flash=math.max(0,flash-dt);}
+ @override void update(double dt){super.update(dt);if(game.finished)return;if(game.move.distance>.05){position+=Vector2(game.move.dx,game.move.dy)*220*dt;facing=math.atan2(game.move.dy,game.move.dx);}position.x=position.x.clamp(20,2380).toDouble();position.y=position.y.clamp(20,2380).toDouble();flash=math.max(0,flash-dt);}
 }
 class Beast extends Fighter{
  Beast(this.kind,this.faction):super(health:kind.hp,maxHealth:kind.hp,radius:kind.radius,tint:Color.lerp(kind.color,Color.fromARGB(255,(faction*47+80)%255,(faction*71+65)%255,(faction*29+45)%255),.22)!);
@@ -35,7 +35,7 @@ class Beast extends Fighter{
  final targets=<Fighter>[game.player,...game.beasts.where((b)=>b!=this&&b.health>0)];targets.sort((a,b)=>(a.position-position).length.compareTo((b.position-position).length));if(targets.isEmpty)return;final t=targets.first;final d=t.position-position;final dist=d.length;if(dist>.1)facing=math.atan2(d.y,d.x);
  if(dist>kind.range*.85){var speed=kind.speed;if(kind==BeastKind.griffin&&ability<=0){speed*=2;ability=4;}position+=d.safeNorm()*speed*dt;}else if(dist<30){position-=d.safeNorm()*kind.speed*.35*dt;}else{position+=Vector2(-d.y,d.x).safeNorm()*kind.speed*.22*dt;}
  if(dist<=kind.range+t.radius&&attackTimer<=0){attackTimer=kind==BeastKind.drake?1.4:kind==BeastKind.skyhawk?.5:kind==BeastKind.ironboar?1.1:.8;t.health-=kind.damage;if(t is Beast)t.flash=.16;}
- for(final o in game.beasts){if(o==this||o.health<=0)continue;final away=position-o.position;final len=away.length;if(len>.01&&len<radius+o.radius)position+=away.safeNorm()*((radius+o.radius-len)*.5);}position.x=position.x.clamp(10,2390);position.y=position.y.clamp(10,2390);
+ for(final o in game.beasts){if(o==this||o.health<=0)continue;final away=position-o.position;final len=away.length;if(len>.01&&len<radius+o.radius)position+=away.safeNorm()*((radius+o.radius-len)*.5);}position.x=position.x.clamp(10,2390).toDouble();position.y=position.y.clamp(10,2390).toDouble();
  }
 }
-extension on Vector2{Vector2 safeNorm()=>length>.0001?clone()..scale(1/length):Vector2.zero();}
+extension on Vector2{Vector2 safeNorm()=>length>.0001?(clone()..scale(1/length)):Vector2.zero();}
