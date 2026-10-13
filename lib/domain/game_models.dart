@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum CreatureType { griffin, drake, skyhawk, ironboar, venomtail }
 
@@ -130,7 +130,7 @@ extension WeaponTierData on WeaponTier {
       };
 
   static WeaponTier fromLevel(int level) =>
-      WeaponTier.values[(level - 1).clamp(0, WeaponTier.values.length - 1) as int];
+      WeaponTier.values[(level - 1).clamp(0, WeaponTier.values.length - 1)];
 }
 
 enum ArmorRank { normal, advanced, legend, epic }

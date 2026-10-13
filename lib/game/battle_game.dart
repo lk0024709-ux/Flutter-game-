@@ -1,20 +1,20 @@
 import 'dart:math' as math;
 
 import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../domain/game_models.dart';
 
 class BattleConfig {
-  const BattleConfig.campaign(GameLevel level)
-      : level = level,
-        chimera = null,
-        isElite = false;
+  const BattleConfig.campaign(this.level)
+      : chimera = null,
+        isElite = false,
+        assert(level != null);
 
-  const BattleConfig.elite(ChimeraType chimera)
+  const BattleConfig.elite(this.chimera)
       : level = null,
-        chimera = chimera,
-        isElite = true;
+        isElite = true,
+        assert(chimera != null);
 
   final GameLevel? level;
   final ChimeraType? chimera;
@@ -157,7 +157,7 @@ class BattleGame extends FlameGame {
     final noShield = modifiers.contains(LevelModifier.noShield);
     final armorFactor = modifiers.contains(LevelModifier.ironSkinless) ? 0.5 : 1.0;
     final playerHp = ironman ? 1 : (config.isElite ? 240 : 120) + armor.hpBonus;
-    final armorDefense = noShield ? 0 : armor.defense * armorFactor + (booster == Booster.ironSkin && !config.isElite ? 0.2 : 0);
+    final armorDefense = noShield ? 0.0 : armor.defense * armorFactor + (booster == Booster.ironSkin && !config.isElite ? 0.2 : 0.0);
     final damageBoost = booster == Booster.damage && !config.isElite ? 1.25 : 1.0;
     final playerDamage = weapon.damage * (config.isElite ? 1.5 : 1.0) * damageBoost;
     final playerSpeed = 220 * (1 + armor.speedBonus);
@@ -524,7 +524,9 @@ class BattleGame extends FlameGame {
       boss.phaseShift = 0.35;
       if (phase == 2 && !boss.summonedMinions) {
         boss.summonedMinions = true;
-        for (var i = 0; i < 2; i++) _spawnEliteMinion(boss, i);
+        for (var i = 0; i < 2; i++) {
+          _spawnEliteMinion(boss, i);
+        }
       }
     }
     final delta = player.position - boss.position;
@@ -533,8 +535,11 @@ class BattleGame extends FlameGame {
     final baseSpeed = boss.speed * (phase == 3 ? 1.2 : 1) * (player.hp / player.maxHp < 0.3 ? 1.15 : 1);
     if (_bossTelegraph <= 0 && boss.dashRemaining <= 0) {
       final preferred = 110 + boss.radius;
-      if (distance > preferred) boss.position = _bounded(boss.position + _normalize(delta) * baseSpeed * dt);
-      else if (distance < 75) boss.position = _bounded(boss.position - _normalize(delta) * baseSpeed * 0.35 * dt);
+      if (distance > preferred) {
+        boss.position = _bounded(boss.position + _normalize(delta) * baseSpeed * dt);
+      } else if (distance < 75) {
+        boss.position = _bounded(boss.position - _normalize(delta) * baseSpeed * 0.35 * dt);
+      }
     }
     if (_bossAbilityTimer <= 0 && _bossTelegraph <= 0) {
       final interval = phase == 1 ? 2.5 : phase == 2 ? 1.8 : 1.2;

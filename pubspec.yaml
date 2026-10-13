@@ -14,7 +14,8 @@ dependencies:
   vector_math: ^2.1.4
   provider: ^6.1.2
   shared_preferences: ^2.3.2
-  google_fonts: ^6.2.1
+  google_fonts: ^9.0.0
+  material_ui: ^1.6.0
   audioplayers: ^6.1.0
   path_provider: ^2.1.4
   # The previous battle screen remains wired until the first 3D battle phase lands.
