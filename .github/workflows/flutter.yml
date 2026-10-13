@@ -74,7 +74,19 @@ jobs:
         run: flutter pub get
 
       - name: Analyze
-        run: flutter analyze
+        shell: bash
+        run: |
+          set +e
+          output_file="$(mktemp)"
+          flutter analyze 2>&1 | tee "$output_file"
+          analysis_status=${PIPESTATUS[0]}
+          if [ "$analysis_status" -ne 0 ]; then
+            while IFS= read -r issue; do
+              printf '::error title=flutter analyze::%s\n' "$issue"
+            done < "$output_file"
+          fi
+          rm -f "$output_file"
+          exit "$analysis_status"
 
       - name: Run tests
         run: flutter test
