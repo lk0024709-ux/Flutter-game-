@@ -21,6 +21,7 @@ class BattleGame extends FlameGame {
   Future<void> onLoad() async {
     arena = Arena(this);
     world.add(arena);
+    await arena.loaded;
     camera.viewfinder.zoom = 1;
     camera.follow(arena.player, maxSpeed: 900);
   }
