@@ -67,6 +67,22 @@ class Arena extends Component with HasGameReference<BattleGame> {
   }
 
   @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    canvas.drawRect(const Rect.fromLTWH(0, 0, 2400, 2400), Paint()..color = const Color(0xFFE3D5B8));
+    final pathPaint = Paint()..color = const Color(0xFFD1BE9B)..style = PaintingStyle.stroke..strokeWidth = 3;
+    for (var ring = 180.0; ring < 1300; ring += 180) {
+      canvas.drawCircle(const Offset(1200, 1200), ring, pathPaint);
+    }
+    final pebble = Paint()..color = const Color(0xFFCCB68E).withOpacity(.6);
+    for (var i = 0; i < 90; i++) {
+      final x = (i * 317) % 2380 + 10.0;
+      final y = (i * 557) % 2380 + 10.0;
+      canvas.drawCircle(Offset(x, y), 2 + (i % 4).toDouble(), pebble);
+    }
+  }
+
+  @override
   void update(double dt) {
     super.update(dt);
     if (ended) return;
