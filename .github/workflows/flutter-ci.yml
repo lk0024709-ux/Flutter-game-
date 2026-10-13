@@ -21,13 +21,57 @@ jobs:
         run: flutter create --platforms=android --project-name blade_brawl .
       - name: Install dependencies
         run: flutter pub get
+      # The three steps below tee their output and re-emit every diagnostic as a
+      # check annotation. The raw job log lives on a host that automation cannot
+      # always reach, while annotations are available through the API, so a red
+      # build explains itself without opening GitHub.
       - name: Analyze
-        run: flutter analyze
+        shell: bash
+        run: |
+          set +e
+          output_file="$(mktemp)"
+          flutter analyze 2>&1 | tee "$output_file"
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            while IFS= read -r line; do
+              case "$line" in
+                *" • "*|*"error:"*|*"Error:"*)
+                  printf '::error title=flutter analyze::%s\n' "${line:0:900}" ;;
+              esac
+            done < "$output_file"
+          fi
+          rm -f "$output_file"
+          exit "$status"
       - name: Unit tests
-        run: flutter test
+        shell: bash
+        run: |
+          set +e
+          output_file="$(mktemp)"
+          flutter test 2>&1 | tee "$output_file"
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            tail -n 60 "$output_file" | while IFS= read -r line; do
+              printf '::error title=flutter test::%s\n' "${line:0:900}"
+            done
+          fi
+          rm -f "$output_file"
+          exit "$status"
       - name: Build debug APK
-        run: flutter build apk --debug
+        shell: bash
+        run: |
+          set +e
+          output_file="$(mktemp)"
+          flutter build apk --debug 2>&1 | tee "$output_file"
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            grep -nE "(Error|error:|Exception)" "$output_file" | head -n 40 | while IFS= read -r line; do
+              printf '::error title=flutter build::%s\n' "${line:0:900}"
+            done
+          fi
+          rm -f "$output_file"
+          exit "$status"
       - name: Upload debug APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: blade-brawl-debug-apk
