@@ -79,10 +79,10 @@ class StoreState extends ChangeNotifier {
 
   void award(int amount, {bool win = false}) {
     coins += amount;
-    if (win) { campaignWins++; highestLevelUnlocked = (highestLevelUnlocked + 1).clamp(1, 350); }
+    if (win) { campaignWins++; highestLevelUnlocked = (highestLevelUnlocked + 1).clamp(1, 350).toInt(); }
     playerXP += win ? 50 : 10;
     while (playerLevel < 100 && playerXP >= (100 * playerLevel * playerLevel * playerLevel).toDouble().sqrtApprox()) {
-      playerXP -= (100 * playerLevel * playerLevel).clamp(100, 1000000);
+      playerXP -= (100 * playerLevel * playerLevel).clamp(100, 1000000).toInt();
       playerLevel++;
       coins += 50;
     }
