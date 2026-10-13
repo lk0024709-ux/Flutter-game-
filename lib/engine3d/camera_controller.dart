@@ -73,7 +73,7 @@ class CameraController3D {
     // A slight lift on the look-at point keeps the horizon above the middle of
     // the screen, which reads much better for a top-down arena.
     final Vector3 target = focus + Vector3(0, 0.9, 0);
-    setViewMatrix(view, _eye, target, Vector3(0, 1, 0));
+    _setViewMatrix(view, _eye, target, Vector3(0, 1, 0));
   }
 
   /// Rotates the camera by a drag delta in logical pixels.
@@ -123,4 +123,38 @@ class CameraController3D {
     final List<double> m = view.storage;
     return -(m[2] * world.x + m[6] * world.y + m[10] * world.z + m[14]);
   }
+}
+
+/// Builds a right-handed world-to-view matrix for [eye] looking at [target].
+///
+/// Written directly into column-major `Matrix4.storage` (row 0 = camera right,
+/// row 1 = camera up, row 2 = -forward) so the projection code can multiply
+/// points with plain arithmetic and no matrix helper that may be renamed or
+/// deprecated by the vector_math package.
+void _setViewMatrix(Matrix4 out, Vector3 eye, Vector3 target, Vector3 up) {
+  Vector3 forward = target - eye;
+  forward = forward.length2 > 0.000000001 ? forward.normalized() : Vector3(0, 0, -1);
+
+  Vector3 right = forward.cross(up);
+  right = right.length2 > 0.000000001 ? right.normalized() : Vector3(1, 0, 0);
+
+  final Vector3 trueUp = right.cross(forward).normalized();
+
+  final List<double> m = out.storage;
+  m[0] = right.x;
+  m[1] = trueUp.x;
+  m[2] = -forward.x;
+  m[3] = 0;
+  m[4] = right.y;
+  m[5] = trueUp.y;
+  m[6] = -forward.y;
+  m[7] = 0;
+  m[8] = right.z;
+  m[9] = trueUp.z;
+  m[10] = -forward.z;
+  m[11] = 0;
+  m[12] = -right.dot(eye);
+  m[13] = -trueUp.dot(eye);
+  m[14] = forward.dot(eye);
+  m[15] = 1;
 }

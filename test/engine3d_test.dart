@@ -39,9 +39,9 @@ void main() {
     });
 
     test('tint respects the alpha channel and clamps', () {
-      expect(Math3d.tint(0xFF808080, 2), 0xFFFFFFFF);
-      expect(Math3d.tint(0xFF000000, 1), 0xFF000000);
-      final int mixed = Math3d.tint(0xFF000000, 1, mixWith: 0xFFFFFFFF, mix: 0.5);
+      expect(LightingRig.tint(0xFF808080, 2), 0xFFFFFFFF);
+      expect(LightingRig.tint(0xFF000000, 1), 0xFF000000);
+      final int mixed = LightingRig.tint(0xFF000000, 1, mixWith: 0xFFFFFFFF, mix: 0.5);
       expect((mixed >> 16) & 0xFF, closeTo(128, 1));
     });
 

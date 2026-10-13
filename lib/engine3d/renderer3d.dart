@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -12,8 +13,8 @@ class MeshInstance {
   MeshInstance({
     required this.model,
     Vector3? position,
-    double yaw = 0,
-    double scale = 1,
+    this.yaw = 0,
+    this.scale = 1,
     this.tint = 0xFFFFFFFF,
     this.tintMix = 0,
     this.showShadow = true,
@@ -21,9 +22,7 @@ class MeshInstance {
     this.visible = true,
     this.modelScale,
     this.yOffset = 0,
-  })  : position = position ?? Vector3.zero(),
-        yaw = yaw,
-        scale = scale;
+  }) : position = position ?? Vector3.zero();
 
   final Model3D model;
   final Vector3 position;
@@ -55,12 +54,31 @@ class MeshInstance {
   /// Cached world transform, rebuilt by the renderer each frame.
   final Matrix4 transform = Matrix4.identity();
 
+  /// World matrix: yaw about Y, uniform scale, then translation.
+  ///
+  /// Written straight into `Matrix4.storage` (column-major) so the pipeline
+  /// does not depend on any deprecated or renamed vector_math helper.
   Matrix4 buildTransform() {
     final double s = effectiveScale;
-    transform.setIdentity();
-    transform.rotateY(yaw);
-    transform.scale(s, s, s);
-    transform.setTranslationRaw(position.x, position.y + yOffset, position.z);
+    final double c = math.cos(yaw) * s;
+    final double sn = math.sin(yaw) * s;
+    final List<double> m = transform.storage;
+    m[0] = c;
+    m[1] = 0;
+    m[2] = -sn;
+    m[3] = 0;
+    m[4] = 0;
+    m[5] = s;
+    m[6] = 0;
+    m[7] = 0;
+    m[8] = sn;
+    m[9] = 0;
+    m[10] = c;
+    m[11] = 0;
+    m[12] = position.x;
+    m[13] = position.y + yOffset;
+    m[14] = position.z;
+    m[15] = 1;
     return transform;
   }
 }
@@ -311,8 +329,7 @@ class Renderer3D {
     );
   }
 
-  static void _transformPoint(Matrix4 m, double x, double y, double z, Vector3 out) {
-    final List<double> s = m.storage;
+  static void _transformPoint(List<double> s, double x, double y, double z, Vector3 out) {
     out.setValues(
       s[0] * x + s[4] * y + s[8] * z + s[12],
       s[1] * x + s[5] * y + s[9] * z + s[13],

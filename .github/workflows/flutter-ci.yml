@@ -33,12 +33,16 @@ jobs:
           flutter analyze 2>&1 | tee "$output_file"
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
-            while IFS= read -r line; do
-              case "$line" in
-                *" • "*|*"error:"*|*"Error:"*)
-                  printf '::error title=flutter analyze::%s\n' "${line:0:900}" ;;
-              esac
-            done < "$output_file"
+            grep -E ' • ' "$output_file" > "$output_file.issues" || true
+            total=$(wc -l < "$output_file.issues")
+            printf '::error title=flutter analyze::%s\n' "total diagnostics: $total"
+            # Every issue as its own annotation, then the whole list again in
+            # batches of eight so the count cannot hide behind a display limit.
+            sed 's/%/%25/g' "$output_file.issues" | while IFS= read -r line; do
+              printf '::error title=analyze::%s\n' "${line:0:900}"
+            done
+            awk 'BEGIN{RS="\n"} {gsub(/%/,"%25"); buf=buf $0 " | "; n++; if (n==8) {printf "::error title=analyze batch::%s\n", substr(buf,1,900); buf=""; n=0}} END{if (n>0) printf "::error title=analyze batch::%s\n", substr(buf,1,900)}' "$output_file.issues"
+            rm -f "$output_file.issues"
           fi
           rm -f "$output_file"
           exit "$status"

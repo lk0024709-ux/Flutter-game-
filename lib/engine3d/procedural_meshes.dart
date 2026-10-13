@@ -71,9 +71,7 @@ class MeshBuilder {
         b = _apply(m, center, b);
         c = _apply(m, center, c);
         d = _apply(m, center, d);
-        final Vector3 rotated = normal.clone();
-        m.applyToVector3(rotated);
-        normal = rotated.normalized();
+        normal = _rotate(m, normal);
       }
       addQuad(a, b, c, d, faceColor, normal: normal);
     }
@@ -102,9 +100,26 @@ class MeshBuilder {
   }
 
   static Vector3 _apply(Matrix4 m, Vector3 center, Vector3 point) {
-    final Vector3 local = point - center;
-    m.applyToVector3(local);
-    return local + center;
+    final List<double> s = m.storage;
+    final double x = point.x - center.x;
+    final double y = point.y - center.y;
+    final double z = point.z - center.z;
+    return Vector3(
+      s[0] * x + s[4] * y + s[8] * z,
+      s[1] * x + s[5] * y + s[9] * z,
+      s[2] * x + s[6] * y + s[10] * z,
+    ) + center;
+  }
+
+  /// Rotates a direction by the matrix's upper 3x3 block.
+  static Vector3 _rotate(Matrix4 m, Vector3 direction) {
+    final List<double> s = m.storage;
+    final Vector3 out = Vector3(
+      s[0] * direction.x + s[4] * direction.y + s[8] * direction.z,
+      s[1] * direction.x + s[5] * direction.y + s[9] * direction.z,
+      s[2] * direction.x + s[6] * direction.y + s[10] * direction.z,
+    );
+    return out.length2 > 0.000001 ? out.normalized() : direction;
   }
 
   /// Vertical cylinder or cone (set [topRadius] to 0 for a cone).
@@ -462,12 +477,12 @@ class ProceduralMeshes {
         final double v = (z + 0.5) / divisions;
         int cell = baseColor;
         if (sampler != null) {
-          cell = Math3d.tint(baseColor, 1, mixWith: sampler(u, v), mix: mix);
+          cell = LightingRig.tint(baseColor, 1, mixWith: sampler(u, v), mix: mix);
         }
         if (jitter > 0) {
           random = (random * 9301 + 49297) % 233280;
           final double delta = (random / 233280 - 0.5) * jitter;
-          cell = Math3d.tint(cell, 1 + delta);
+          cell = LightingRig.tint(cell, 1 + delta);
         }
         b.addQuad(
           Vector3(x0, 0, z0 + step),
