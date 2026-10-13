@@ -1,18 +1,43 @@
 name: blade_brawl
-description: "Blade Brawl: Rannbhoomi - a premium top-down arena brawler."
+description: "Blade Brawl: Rannbhoomi - a premium top-down melee battle royale RPG built with Flutter and Flame."
 publish_to: "none"
-version: 0.1.0+1
+version: 1.0.0+1
+
 environment:
   sdk: ">=3.0.0 <4.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
   flame: ^1.18.0
+  vector_math: ^2.1.4
   shared_preferences: ^2.2.3
   google_fonts: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+
 flutter:
   uses-material-design: true
+
+  # Downloaded art. Every folder listed here exists in the repository, so a
+  # bare checkout builds; scripts/download_assets.sh fills the texture and
+  # audio folders when the machine running it can reach the original hosts.
+  assets:
+    - assets/LICENSES.txt
+    - assets/models/creatures/
+    - assets/models/player/
+    - assets/models/props/
+    - assets/models/kenney/mini-arena/
+    - assets/models/kenney/mini-arena/Textures/
+    - assets/models/kenney/mini-forest/
+    - assets/models/kenney/mini-forest/Textures/
+    - assets/models/kenney/cube-pets/
+    - assets/models/kenney/cube-pets/Textures/
+    - assets/models/kenney/graveyard/
+    - assets/models/kenney/graveyard/Textures/
+    - assets/textures/
+    - assets/audio/sfx/
+    - assets/audio/music/

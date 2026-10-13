@@ -6,6 +6,7 @@ on:
     branches: [main]
 permissions:
   contents: read
+  pull-requests: write
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -21,13 +22,75 @@ jobs:
         run: flutter create --platforms=android --project-name blade_brawl .
       - name: Install dependencies
         run: flutter pub get
+      # Each step tees its output, annotates the first failures and posts the
+      # full report as a pull request comment, because the raw job log lives on
+      # a host that automation cannot always reach. Check annotations are capped,
+      # so the comment carries the complete list.
       - name: Analyze
-        run: flutter analyze
+        id: analyze
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set +e
+          flutter analyze 2>&1 | tee analyzer-report.txt
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            echo "::error title=flutter analyze::see the pull request comment for the full report"
+            if [ -n "${PR_NUMBER:-}" ]; then
+              {
+                echo "## flutter analyze"
+                echo
+                echo "\`\`\`"
+                head -c 55000 analyzer-report.txt
+                echo "\`\`\`"
+              } > report-comment.md
+              gh pr comment "$PR_NUMBER" --body-file report-comment.md || echo "could not post report"
+            fi
+          fi
+          exit "$status"
+
       - name: Unit tests
-        run: flutter test
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set +e
+          flutter test 2>&1 | tee test-report.txt
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            echo "::error title=flutter test::see the pull request comment for the full report"
+            if [ -n "${PR_NUMBER:-}" ]; then
+              {
+                echo "## flutter test"
+                echo
+                echo "\`\`\`"
+                tail -c 55000 test-report.txt
+                echo "\`\`\`"
+              } > test-comment.md
+              gh pr comment "$PR_NUMBER" --body-file test-comment.md || echo "could not post report"
+            fi
+          fi
+          exit "$status"
+
       - name: Build debug APK
-        run: flutter build apk --debug
+        shell: bash
+        run: |
+          set +e
+          output_file="$(mktemp)"
+          flutter build apk --debug 2>&1 | tee "$output_file"
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            grep -nE "(Error|error:|Exception)" "$output_file" | head -n 40 | while IFS= read -r line; do
+              printf '::error title=flutter build::%s\n' "${line:0:900}"
+            done
+          fi
+          rm -f "$output_file"
+          exit "$status"
       - name: Upload debug APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: blade-brawl-debug-apk

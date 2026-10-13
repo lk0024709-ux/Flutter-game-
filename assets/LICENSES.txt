@@ -1,0 +1,216 @@
+Blade Brawl: Rannbhoomi - third-party asset credits
+===================================================
+
+AUTOMATIC. Every file listed here was downloaded by scripts/download_assets.sh
+either from GitHub (the mirror below) or, when you run the script on your own
+machine, from the original CC0 sources. Re-running the script appends new lines
+at the bottom - never delete a line, the CC-BY entries are a licence condition.
+
+
+WHY ONLY GITHUB MIRRORS ARE PRESENT IN THIS CHECKOUT
+----------------------------------------------------
+The build sandbox used to assemble this repository can only reach
+github.com / api.github.com / codeload.github.com. kenney.nl, quaternius.com,
+poly.pizza, ambientcg.com, freesound.org, opengameart.org and
+raw.githubusercontent.com are all unreachable from it, so the assets they host
+could not be fetched. The download script in scripts/ contains the full list of
+original sources with fallbacks - run it locally (./scripts/download_assets.sh)
+and the game picks the extra files up automatically, because every asset folder
+is already declared in pubspec.yaml.
+
+
+3D MODELS - included in this repository
+---------------------------------------
+All five models come from the Khronos Group glTF Sample Assets repository, which
+is the reference model set published by the Khronos Group:
+    Source repository : https://github.com/KhronosGroup/glTF-Sample-Assets
+    Fetched with      : git clone --filter=blob:none --sparse (see the script)
+    Upstream path     : Models/<Model>/glTF-Binary/<Model>.glb
+
+assets/models/creatures/fox.glb
+    Model     : Fox
+    Author    : PixelMannen (model), tomkranis (rigging/animation), AsoboStudio
+    Source    : https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Fox
+    Licence   : CC0-1.0 (model, rig and animation) / CC-BY-4.0 (metadocumentation)
+    Note      : shipped in bind pose - the game does not play skeletal animation.
+    Full text : assets/models/creatures/fox.LICENSE.md
+
+assets/models/player/warrior.glb
+    Model     : Rigged Figure
+    Author    : Cesium
+    Source    : https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/RiggedFigure
+    Licence   : CC-BY-4.0
+    Note      : shipped in bind pose - the game does not play skeletal animation.
+    Full text : assets/models/player/warrior.LICENSE.md
+
+assets/models/player/scout.glb
+    Model     : Cesium Man
+    Author    : Cesium
+    Source    : https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CesiumMan
+    Licence   : CC-BY-4.0 (Cesium logo/trademark excluded)
+    Note      : shipped in bind pose - the game does not play skeletal animation.
+    Full text : assets/models/player/scout.LICENSE.md
+
+assets/models/props/box.glb
+    Model     : Box
+    Author    : Cesium
+    Source    : https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Box
+    Licence   : CC-BY-4.0
+    Full text : assets/models/props/box.LICENSE.md
+
+assets/models/props/crate.glb
+    Model     : Box Textured
+    Author    : Cesium
+    Source    : https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/BoxTextured
+    Licence   : CC-BY-4.0 (Cesium logo/trademark excluded)
+    Full text : assets/models/props/crate.LICENSE.md
+
+
+MODELS DELIBERATELY NOT SHIPPED
+-------------------------------
+Duck (Khronos glTF-Sample-Assets)
+    Rejected: its model files are under the SCEA Shared Source Licence, which is
+    not unambiguously free for commercial use, and this project only accepts
+    CC0 / CC-BY / public-domain asset files. The script still downloads it for
+    local experiments, but the game never loads it.
+
+TrafficCone, PotOfCoals, Lantern, Avocado, WaterBottle, BoomBox, AntiqueCamera,
+DragonAttenuation, DamagedHelmet, Chair, BrainStem (Khronos glTF-Sample-Assets)
+    Rejected: each GLB is 1.8 MB - 17 MB. They are licensed CC0/CC-BY and are
+    listed in the download script for anyone who wants them, but they are too
+    heavy to keep in this repository. The arena builds procedural stand-ins
+    instead (see lib/engine3d/procedural_meshes.dart).
+
+
+3D MODELS - Kenney kits (CC0 1.0, included in this repository)
+------------------------------------------------------------
+52 files, 3.2 MB. Fetched from the community mirror of Kenney's CC0 3D
+packs (the official host, kenney.nl, is unreachable from the build
+sandbox). Files are byte-for-byte the published pack contents:
+    Mirror    : https://github.com/shorepine/kenney/3d/<kit>
+    Originals : https://kenney.nl/assets/<kit>
+    Licence   : CC0 1.0 Universal (public domain dedication)
+    Author    : Kenney  (https://kenney.nl)
+
+assets/models/kenney/mini-arena/
+assets/models/kenney/mini-arena/Textures/colormap.png - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/banner.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/bricks.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/character-soldier.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/column-damaged.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/column.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/floor.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/statue.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/tree.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/trophy.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/wall.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-arena/weapon-sword.glb - Source: https://kenney.nl/assets/mini-arena - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+
+assets/models/kenney/mini-forest/
+assets/models/kenney/mini-forest/Textures/colormap.png - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/character-archer.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/fence.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/flag.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/patch-dirt.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/patch-grass.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/plant.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/rocks-high.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/rocks-low.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/stones.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/target.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/tent.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/tree-high.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/tree.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/mini-forest/weapon-bow.glb - Source: https://kenney.nl/assets/mini-forest - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+
+assets/models/kenney/cube-pets/
+assets/models/kenney/cube-pets/Textures/colormap.png - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/cube-pets/animal-bee.glb - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/cube-pets/animal-caterpillar.glb - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/cube-pets/animal-elephant.glb - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/cube-pets/animal-fox.glb - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/cube-pets/animal-hog.glb - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/cube-pets/animal-lion.glb - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/cube-pets/animal-parrot.glb - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/cube-pets/animal-tiger.glb - Source: https://kenney.nl/assets/cube-pets - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+
+assets/models/kenney/graveyard/
+assets/models/kenney/graveyard/Textures/colormap.png - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/character-ghost.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/character-skeleton.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/character-vampire.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/character-zombie.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/coffin.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/crypt.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/gravestone-broken.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/gravestone-cross.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/gravestone-round.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/iron-fence.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/lantern-candle.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/pillar-obelisk.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/pine.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/pumpkin.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/models/kenney/graveyard/urn-round.glb - Source: https://kenney.nl/assets/graveyard - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+
+
+SURFACE TEXTURES (CC0 1.0, included in this repository)
+------------------------------------------------------
+Eight 512x512 JPEGs downscaled from the 2K colour maps published by
+ambientCG, fetched from a GitHub mirror of the same CC0 files and
+reduced locally so the application bundle stays small:
+    Mirror   : https://github.com/Calinou/godot-cmvalley/tree/master/ambientcg
+    Originals: https://ambientcg.com/  (author: Lennart Demes)
+    Licence  : CC0 1.0 Universal
+
+assets/textures/arena_floor.jpg - Source: https://ambientcg.com/view?id=PavingStones054 - Licence: CC0-1.0 - Author: ambientCG (Lennart Demes) - 512x512, 85 KB on disk - used for: Arena ground plate and safe-zone rings
+assets/textures/temple_tiles.jpg - Source: https://ambientcg.com/view?id=Tiles049 - Licence: CC0-1.0 - Author: ambientCG (Lennart Demes) - 512x512, 43 KB on disk - used for: Sanctum and rank-boss floors
+assets/textures/arena_rock.jpg - Source: https://ambientcg.com/view?id=Rock010 - Licence: CC0-1.0 - Author: ambientCG (Lennart Demes) - 512x512, 40 KB on disk - used for: Masonry ring, columns and obelisks
+assets/textures/wilds_grass.jpg - Source: https://ambientcg.com/view?id=Grass004 - Licence: CC0-1.0 - Author: ambientCG (Lennart Demes) - 512x512, 104 KB on disk - used for: Forest and grassland scenery clusters
+assets/textures/gravel_pit.jpg - Source: https://ambientcg.com/view?id=Gravel011 - Licence: CC0-1.0 - Author: ambientCG (Lennart Demes) - 512x512, 58 KB on disk - used for: Poison pools, ash fields and the storm ring
+assets/textures/crate_planks.jpg - Source: https://ambientcg.com/view?id=Planks012 - Licence: CC0-1.0 - Author: ambientCG (Lennart Demes) - 512x512, 43 KB on disk - used for: Crates, banners and wooden barricades
+assets/textures/arena_wall.jpg - Source: https://ambientcg.com/view?id=Concrete035 - Licence: CC0-1.0 - Author: ambientCG (Lennart Demes) - 512x512, 55 KB on disk - used for: Outer walls and ruins
+assets/textures/frozen_peaks.jpg - Source: https://ambientcg.com/view?id=Snow002 - Licence: CC0-1.0 - Author: ambientCG (Lennart Demes) - 512x512, 8 KB on disk - used for: Frozen Peak arena variant
+
+
+AUDIO (CC0 1.0, included in this repository)
+-------------------------------------------
+Twenty OGG cues taken from three CC0 Kenney audio packs, fetched
+through their Godot ports on GitHub (kenney.nl is unreachable from the
+build sandbox). The original file name is recorded on every line:
+    Packs    : Kenney RPG Audio, Kenney Impact Sounds, Kenney Music Jingles
+    Originals: https://kenney.nl/assets/rpg-audio
+               https://kenney.nl/assets/impact-sounds
+               https://kenney.nl/assets/music-jingles
+    Licence  : CC0 1.0 Universal
+
+assets/audio/sfx/sword_swing.ogg - Original file: rpg audio/draw_knife_1.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-rpg-audio-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/sword_hit.ogg - Original file: rpg audio/knife_slice.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-rpg-audio-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/shield_block.ogg - Original file: impact sounds/impact_plate_medium_000.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-impact-sounds-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/creature_hit.ogg - Original file: impact sounds/impact_punch_medium_000.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-impact-sounds-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/creature_death.ogg - Original file: impact sounds/impact_soft_heavy_002.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-impact-sounds-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/boss_roar.ogg - Original file: impact sounds/impact_bell_heavy_000.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-impact-sounds-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/chest_open.ogg - Original file: impact sounds/impact_plank_medium_001.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-impact-sounds-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/coin_pickup.ogg - Original file: rpg audio/handle_coins.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-rpg-audio-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/powerup.ogg - Original file: music jingles/Pizzicato jingles/jingles_pizzi_0.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-music-jingles-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/level_up.ogg - Original file: music jingles/Steel jingles/jingles_steel_0.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-music-jingles-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/footstep.ogg - Original file: rpg audio/footstep_0.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-rpg-audio-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/storm_warning.ogg - Original file: impact sounds/impact_bell_heavy_002.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-impact-sounds-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/ui_click.ogg - Original file: rpg audio/metal_click.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-rpg-audio-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/sfx/ui_confirm.ogg - Original file: rpg audio/metal_latch.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-rpg-audio-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/music/home_theme.ogg - Original file: Pizzicato jingles/jingles_pizzi_1.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-music-jingles-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/music/battle_theme.ogg - Original file: Steel jingles/jingles_steel_1.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-music-jingles-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/music/elite_theme.ogg - Original file: Hit jingles/jingles_hit_2.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-music-jingles-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/music/shop_theme.ogg - Original file: Sax jingles/jingles_sax_5.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-music-jingles-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/music/victory.ogg - Original file: Steel jingles/jingles_steel_3.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-music-jingles-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+assets/audio/music/defeat.ogg - Original file: Sax jingles/jingles_sax_2.ogg - Source: https://kenney.nl/assets - Mirror: https://github.com/Boyquotes/kenney-music-jingles-for-godot - Licence: CC0-1.0 - Author: Kenney (https://kenney.nl)
+
+
+WHAT scripts/download_assets.sh ADDS ON TOP OF THE ABOVE
+--------------------------------------------------------
+The script is idempotent and appends a licence line for every file it
+fetches. It looks for the remaining Kenney kits (mini-dungeon,
+mini-characters, nature), extra ambientCG surfaces and the full Kenney
+Impact Sounds / Music Jingles packs straight from the original hosts.
+Nothing it fetches is required: the game already renders with what is
+committed here, missing models fall back to procedural geometry and
+missing textures fall back to the palette in lib/theme/app_colors.dart.
