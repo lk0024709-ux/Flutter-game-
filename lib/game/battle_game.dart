@@ -11,8 +11,10 @@ class BattleGame extends FlameGame {
   final WeaponTier weapon;
   final ValueChanged<bool> onFinished;
   final Vector2 movement = Vector2.zero();
+  final ValueNotifier<int> hudTick = ValueNotifier<int>(0);
   late Arena arena;
   double elapsed = 0;
+  double hudClock = 0;
   int get enemiesRemaining => arena.fighters.where((f) => !f.player && f.hp > 0).length;
 
   @override
@@ -69,6 +71,8 @@ class Arena extends Component with HasGameReference<BattleGame> {
     super.update(dt);
     if (ended) return;
     game.elapsed += dt;
+    hudClock += dt;
+    if (hudClock >= .15) { hudClock = 0; game.hudTick.value++; }
     final alive = fighters.where((f) => f.hp > 0).toList();
     if (player.hp <= 0) { ended = true; game.onFinished(false); return; }
     if (alive.where((f) => !f.player).isEmpty) { ended = true; game.onFinished(true); return; }
