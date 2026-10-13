@@ -1121,11 +1121,11 @@ class BattleGame extends FlameGame {
         final x = 300 + i * 490 + math.sin(_elapsed * 0.35 + i) * 32;
         final y = 410 + (i % 2) * 620;
         canvas.drawRRect(
-          RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(x, y), width: 46, height: 175), const Radius.circular(13)),
+          RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(x, y), width: 46.0, height: 175.0), const Radius.circular(13)),
           Paint()..color = const Color(0xFF526D58).withValues(alpha: 0.47),
         );
         canvas.drawRRect(
-          RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(x, y), width: 13, height: 175), const Radius.circular(8)),
+          RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(x, y), width: 13.0, height: 175.0), const Radius.circular(8)),
           Paint()..color = const Color(0xFFD2B565).withValues(alpha: 0.37),
         );
       }
@@ -1167,7 +1167,7 @@ class BattleGame extends FlameGame {
     const segments = 58;
     for (var i = 0; i < segments; i += 2) {
       final start = _tau * i / segments;
-      final sweep = _tau / segments;
+      const sweep = _tau / segments;
       canvas.drawArc(Rect.fromCircle(center: center, radius: radius), start, sweep, false, paint);
     }
   }
@@ -1278,8 +1278,11 @@ class BattleGame extends FlameGame {
         ..strokeWidth = fighter.isPlayer ? 5 : 3);
       canvas.restore();
     }
-    if (fighter.isBoss && fighter.alive) _drawBossHealth(canvas, fighter);
-    else if (fighter.hp < fighter.maxHp * 0.98) _drawHealthBar(canvas, fighter);
+    if (fighter.isBoss && fighter.alive) {
+      _drawBossHealth(canvas, fighter);
+    } else if (fighter.hp < fighter.maxHp * 0.98) {
+      _drawHealthBar(canvas, fighter);
+    }
   }
 
   void _drawCreatureParts(Canvas canvas, Fighter fighter, Paint bodyPaint) {

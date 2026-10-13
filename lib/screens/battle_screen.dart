@@ -153,10 +153,10 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
     final eliteTheme = _isElite;
     return Theme(
       data: eliteTheme ? AppTheme.dark : AppTheme.light,
-      child: WillPopScope(
-        onWillPop: () async {
-          if (!_isResult) _togglePause();
-          return false;
+      child: PopScope<void>(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop && !_isResult) _togglePause();
         },
         child: Scaffold(
           backgroundColor: eliteTheme ? AppColors.darkBackground : AppColors.background,
@@ -276,7 +276,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
                     Wrap(
                       spacing: 6,
                       children: [
-                        if (hud.poisoned) _PowerPill(label: 'POISON', icon: Icons.science_rounded, danger: true),
+                        if (hud.poisoned) const _PowerPill(label: 'POISON', icon: Icons.science_rounded, danger: true),
                         if (hud.coward) const _PowerPill(label: 'COWARD', icon: Icons.remove_circle_outline_rounded),
                         if (hud.powerupDamage) const _PowerPill(label: 'MIGHT', icon: Icons.bolt_rounded),
                         if (_isElite) const _PowerPill(label: '2 REVIVES', icon: Icons.restart_alt_rounded),
