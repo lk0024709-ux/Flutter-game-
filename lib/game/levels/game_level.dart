@@ -1,25 +1,95 @@
-enum Rank { bronze, silver, gold, platinum, diamond, masters, grandMasters }
+import '../creature.dart';
+import '../game_map.dart';
+import '../rank.dart';
+import 'boss_levels.dart';
+import 'level_modifier.dart';
 
-extension RankData on Rank {
-  String get label => const ['Bronze','Silver','Gold','Platinum','Diamond','Masters','Grand Masters'][index];
-  String get icon => const ['🥉','🥈','🥇','💠','💎','🏆','👑'][index];
-  String get mapName => const ['The Dust Pit','Frost Hollow','Ember Forge','Jade Temple','Crystal Cavern','Storm Citadel','Throne of Rann'][index];
-  double get coinMultiplier => const [1,1.2,1.5,2,2.5,3,5][index];
-  int get unlockWins => const [0,3,8,15,25,40,60][index];
-  int get campaignRewardMultiplier => const [1,2,3,4,6,8,10][index];
+/// The six level phases inside every rank (50 levels each).
+enum LevelPhase {
+  onboarding('Onboarding', 'One species, gentle pressure', 1),
+  duo('Two Species', 'The war for the arena begins', 2),
+  twist('Twist Focus', 'The map itself joins the fight', 3),
+  escalation('Escalation', 'Four species, stacked modifiers', 4),
+  gauntlet('Gauntlet', 'Everything at once', 5),
+  rankBoss('Rank Boss', 'Handcrafted boss encounter', 6);
+
+  const LevelPhase(this.label, this.description, this.unlockCount);
+
+  final String label;
+  final String description;
+
+  /// How many creature types appear in this phase.
+  final int unlockCount;
 }
 
+/// One campaign level out of the 350 procedurally generated ones.
 class GameLevel {
-  const GameLevel({required this.number,required this.rank,required this.levelInRank,required this.difficulty,required this.npcCount,required this.mapName,required this.boss,required this.modifiers,required this.baseCoins});
+  const GameLevel({
+    required this.number,
+    required this.rank,
+    required this.levelInRank,
+    required this.map,
+    required this.phase,
+    required this.modifiers,
+    required this.creatureMix,
+    required this.npcCount,
+    required this.boss,
+  });
+
+  /// 1..350.
   final int number;
   final Rank rank;
+
+  /// 1..50 inside the rank.
   final int levelInRank;
-  final double difficulty;
+  final GameMapDef map;
+  final LevelPhase phase;
+  final List<LevelModifier> modifiers;
+  final List<CreatureType> creatureMix;
   final int npcCount;
-  final String mapName;
-  final bool boss;
-  final List<String> modifiers;
-  final int baseCoins;
-  String get title => boss ? rank.label + ' Rank Boss' : rank.label + ' · Level ' + levelInRank.toString();
-  bool get miniBoss => levelInRank % 10 == 0 && !boss;
+  final BossLevelDef? boss;
+
+  bool get isBoss => boss != null;
+
+  /// Mini-boss tiles (every 10th level) are marked with a star.
+  bool get isMiniBoss => !isBoss && levelInRank % 10 == 0;
+
+  /// Difficulty inside the rank: 1.0 -> 3.0.
+  double get withinRankDifficulty => 1.0 + (levelInRank / Rank.levelsPerRank) * 2.0;
+
+  /// Overall difficulty (within-rank x rank multiplier).
+  double get difficulty => withinRankDifficulty * rank.difficultyMultiplier;
+
+  /// Coin multiplier from the ranked-map table.
+  double get mapCoinMultiplier => rank.mapCoinMultiplier;
+
+  /// Base coins from the level formula: 40 + (levelInRank * 8).
+  int get baseCoins => 40 + levelInRank * 8;
+
+  /// Reward preview shown in the level-detail modal.
+  int get previewCoins => (baseCoins * rank.coinMultiplier).round() + (isBoss ? boss!.coinReward : 0);
+
+  String get label => '${rank.label} • Level $number';
+
+  String get shortLabel => '${rank.emoji} $number';
+
+  /// Difficulty tag for the detail modal.
+  String get difficultyTag {
+    if (isBoss) {
+      return 'RANK BOSS';
+    }
+    if (isMiniBoss) {
+      return 'MINI BOSS';
+    }
+    if (difficulty >= 6) {
+      return 'BRUTAL';
+    }
+    if (difficulty >= 3) {
+      return 'HARD';
+    }
+    if (difficulty >= 1.6) {
+      return 'MEDIUM';
+    }
+    return 'EASY';
+  }
 }
