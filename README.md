@@ -5,8 +5,9 @@ A Flutter + Flame top-down arena brawler with a premium, warm earthy UI. This re
 ## Run locally
 
 1. Install Flutter 3.0+ and a compatible Dart SDK.
-2. Run `flutter pub get` from the project root.
-3. Run `flutter run` on an Android device or emulator.
+2. Generate the Android runner once: `flutter create --platforms=android --project-name blade_brawl .`.
+3. Run `flutter pub get` from the project root.
+4. Run `flutter run` on an Android device or emulator.
 
 ## Current playable foundation
 
