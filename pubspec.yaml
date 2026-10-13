@@ -1,0 +1,29 @@
+name: battle_of_sword_master
+description: A premium procedural 3D arena battler with a persistent forge and ranked campaign.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.10.0 <4.0.0"
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_scene: ^0.22.0
+  vector_math: ^2.1.4
+  provider: ^6.1.2
+  shared_preferences: ^2.3.2
+  google_fonts: ^6.2.1
+  audioplayers: ^6.1.0
+  path_provider: ^2.1.4
+  # The previous battle screen remains wired until the first 3D battle phase lands.
+  flame: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
