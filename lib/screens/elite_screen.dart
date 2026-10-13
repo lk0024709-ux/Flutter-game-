@@ -161,7 +161,7 @@ class _DarkStat extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 10),
-        decoration: BoxDecoration(color: Colors.white.withOpacity(0.06), borderRadius: BorderRadius.circular(13)),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(13)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -198,7 +198,7 @@ class _ChimeraCard extends StatelessWidget {
             Container(
               width: 58,
               height: 58,
-              decoration: BoxDecoration(color: chimera.color.withOpacity(0.19), borderRadius: BorderRadius.circular(18)),
+              decoration: BoxDecoration(color: chimera.color.withValues(alpha: 0.19), borderRadius: BorderRadius.circular(18)),
               child: Center(child: Text(chimera.emoji, style: const TextStyle(fontSize: 23))),
             ),
             const SizedBox(width: 14),

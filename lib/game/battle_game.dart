@@ -709,7 +709,9 @@ class BattleGame extends FlameGame {
       final angle = (_elapsed ~/ 10) * math.pi / 2;
       final wind = Offset.fromDirection(angle, 20 * dt);
       player.position = _bounded(player.position + wind);
-      for (final enemy in enemies.where((item) => item.alive)) enemy.position = _bounded(enemy.position + wind);
+      for (final enemy in enemies.where((item) => item.alive)) {
+        enemy.position = _bounded(enemy.position + wind);
+      }
     }
     final mirrorMap = rank == Rank.diamond || rank == Rank.grandMasters || modifiers.contains(LevelModifier.mirrorMatch);
     if (mirrorMap && _mirrorTimer <= 0) {
@@ -995,7 +997,8 @@ class BattleGame extends FlameGame {
   String get _zoneHudLabel {
     final radius = _currentZoneRadius.round();
     final next = _zonePhase < 6 ? [900, 600, 350, 150, 60][_zonePhase - 1] : null;
-    final nextAt = const [20, 45, 75, 105, 150][(_zonePhase - 1).clamp(0, 4) as int];
+    const phaseStartTimes = [20, 45, 75, 105, 150];
+    final nextAt = phaseStartTimes[(_zonePhase - 1).clamp(0, 4)];
     if (next == null) return 'ZONE $radius · SUDDEN DEATH';
     return 'ZONE $radius → $next · ${math.max(0, nextAt - _zoneClock).ceil()}s';
   }
@@ -1022,7 +1025,7 @@ class BattleGame extends FlameGame {
   }
 
   Offset _bounded(Offset position) {
-    final padding = 35.0;
+    const padding = 35.0;
     return Offset(position.dx.clamp(padding, _mapSize - padding).toDouble(), position.dy.clamp(padding, _mapSize - padding).toDouble());
   }
 
@@ -1056,19 +1059,25 @@ class BattleGame extends FlameGame {
     _drawShrines(canvas);
     _drawSanctuaries(canvas);
     if (_lightningTelegraph > 0) _drawLightningMarker(canvas);
-    for (final cache in _caches) _drawCache(canvas, cache);
-    for (final projectile in _projectiles) _drawProjectile(canvas, projectile);
-    for (final enemy in enemies.where((enemy) => enemy.alive)) _drawFighter(canvas, enemy);
+    for (final cache in _caches) {
+      _drawCache(canvas, cache);
+    }
+    for (final projectile in _projectiles) {
+      _drawProjectile(canvas, projectile);
+    }
+    for (final enemy in enemies.where((enemy) => enemy.alive)) {
+      _drawFighter(canvas, enemy);
+    }
     _drawFighter(canvas, player);
     if (config.level != null && modifiersFor(config.level!).contains(LevelModifier.darkness)) {
       final darkness = Path()
         ..fillType = PathFillType.evenOdd
         ..addRect(Rect.fromLTWH(0, 0, _mapSize, _mapSize))
         ..addOval(Rect.fromCircle(center: player.position, radius: 440));
-      canvas.drawPath(darkness, Paint()..color = const Color(0xFF171512).withOpacity(0.54));
+      canvas.drawPath(darkness, Paint()..color = const Color(0xFF171512).withValues(alpha: 0.54));
     }
     if (_isDustFogActive()) {
-      canvas.drawRect(Rect.fromLTWH(0, 0, _mapSize, _mapSize), Paint()..color = const Color(0xFFB8AF9E).withOpacity(0.13));
+      canvas.drawRect(Rect.fromLTWH(0, 0, _mapSize, _mapSize), Paint()..color = const Color(0xFFB8AF9E).withValues(alpha: 0.13));
     }
     canvas.restore();
   }
@@ -1078,16 +1087,16 @@ class BattleGame extends FlameGame {
     for (var i = 0; i < _groundMarks.length; i++) {
       final point = _groundMarks[i];
       final radius = i % 4 == 0 ? 4.0 : 2.2;
-      canvas.drawCircle(point, radius, Paint()..color = _mapAccent.withOpacity(i % 3 == 0 ? 0.10 : 0.06));
+      canvas.drawCircle(point, radius, Paint()..color = _mapAccent.withValues(alpha: i % 3 == 0 ? 0.10 : 0.06));
     }
     final border = Paint()
-      ..color = _mapAccent.withOpacity(0.35)
+      ..color = _mapAccent.withValues(alpha: 0.35)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 13;
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(8, 8, _mapSize - 16, _mapSize - 16), const Radius.circular(50)), border);
     canvas.drawRRect(
       RRect.fromRectAndRadius(Rect.fromLTWH(22, 22, _mapSize - 44, _mapSize - 44), const Radius.circular(43)),
-      Paint()..color = _mapAccent.withOpacity(0.08),
+      Paint()..color = _mapAccent.withValues(alpha: 0.08),
     );
   }
 
@@ -1096,15 +1105,15 @@ class BattleGame extends FlameGame {
     for (var i = 0; i < _lavaPatches.length; i++) {
       if (rank == Rank.gold || rank == Rank.grandMasters) {
         final point = _lavaPatches[i];
-        canvas.drawOval(Rect.fromCenter(center: point, width: 115 + (i % 3) * 18, height: 56 + (i % 2) * 11), Paint()..color = const Color(0xFFCA5836).withOpacity(0.24));
-        canvas.drawOval(Rect.fromCenter(center: point, width: 74, height: 27), Paint()..color = const Color(0xFFE7A05D).withOpacity(0.48));
+        canvas.drawOval(Rect.fromCenter(center: point, width: 115 + (i % 3) * 18, height: 56 + (i % 2) * 11), Paint()..color = const Color(0xFFCA5836).withValues(alpha: 0.24));
+        canvas.drawOval(Rect.fromCenter(center: point, width: 74, height: 27), Paint()..color = const Color(0xFFE7A05D).withValues(alpha: 0.48));
       }
     }
     for (var i = 0; i < _icePatches.length; i++) {
       if (rank == Rank.silver || rank == Rank.grandMasters) {
         final point = _icePatches[i];
-        canvas.drawOval(Rect.fromCenter(center: point, width: 130, height: 75), Paint()..color = const Color(0xFFDFF2F0).withOpacity(0.52));
-        canvas.drawOval(Rect.fromCenter(center: point, width: 75, height: 34), Paint()..color = const Color(0xFFFFFFFF).withOpacity(0.20));
+        canvas.drawOval(Rect.fromCenter(center: point, width: 130, height: 75), Paint()..color = const Color(0xFFDFF2F0).withValues(alpha: 0.52));
+        canvas.drawOval(Rect.fromCenter(center: point, width: 75, height: 34), Paint()..color = const Color(0xFFFFFFFF).withValues(alpha: 0.20));
       }
     }
     if (rank == Rank.platinum || rank == Rank.grandMasters) {
@@ -1113,11 +1122,11 @@ class BattleGame extends FlameGame {
         final y = 410 + (i % 2) * 620;
         canvas.drawRRect(
           RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(x, y), width: 46, height: 175), const Radius.circular(13)),
-          Paint()..color = const Color(0xFF526D58).withOpacity(0.47),
+          Paint()..color = const Color(0xFF526D58).withValues(alpha: 0.47),
         );
         canvas.drawRRect(
           RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(x, y), width: 13, height: 175), const Radius.circular(8)),
-          Paint()..color = const Color(0xFFD2B565).withOpacity(0.37),
+          Paint()..color = const Color(0xFFD2B565).withValues(alpha: 0.37),
         );
       }
     }
@@ -1131,7 +1140,7 @@ class BattleGame extends FlameGame {
           ..lineTo(point.dx, point.dy + height)
           ..lineTo(point.dx - height * 0.45, point.dy)
           ..close();
-        canvas.drawPath(path, Paint()..color = _mapAccent.withOpacity(0.4));
+        canvas.drawPath(path, Paint()..color = _mapAccent.withValues(alpha: 0.4));
       }
     }
   }
@@ -1140,7 +1149,7 @@ class BattleGame extends FlameGame {
     final center = _worldCenter;
     final radius = _currentZoneRadius;
     final phase = _zonePhase;
-    final shade = phase <= 2 ? const Color(0xFF52606B).withOpacity(0.12) : phase <= 4 ? const Color(0xFFD39A43).withOpacity(0.15) : const Color(0xFF9C4A36).withOpacity(0.22);
+    final shade = phase <= 2 ? const Color(0xFF52606B).withValues(alpha: 0.12) : phase <= 4 ? const Color(0xFFD39A43).withValues(alpha: 0.15) : const Color(0xFF9C4A36).withValues(alpha: 0.22);
     final path = Path()
       ..fillType = PathFillType.evenOdd
       ..addRect(Rect.fromLTWH(0, 0, _mapSize, _mapSize))
@@ -1148,10 +1157,10 @@ class BattleGame extends FlameGame {
     canvas.drawPath(path, Paint()..color = shade);
     final pulse = (math.sin(_elapsed * 2) + 1) * 0.5;
     _drawDashedCircle(canvas, center, radius, Paint()
-      ..color = _mapAccent.withOpacity(0.55 + pulse * 0.18)
+      ..color = _mapAccent.withValues(alpha: 0.55 + pulse * 0.18)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3);
-    canvas.drawCircle(center, radius, Paint()..color = _mapAccent.withOpacity(0.025));
+    canvas.drawCircle(center, radius, Paint()..color = _mapAccent.withValues(alpha: 0.025));
   }
 
   void _drawDashedCircle(Canvas canvas, Offset center, double radius, Paint paint) {
@@ -1165,12 +1174,12 @@ class BattleGame extends FlameGame {
 
   void _drawShrines(Canvas canvas) {
     for (final position in _shrinePositions) {
-      canvas.drawCircle(position, 74, Paint()..color = const Color(0xFF719368).withOpacity(0.09));
+      canvas.drawCircle(position, 74, Paint()..color = const Color(0xFF719368).withValues(alpha: 0.09));
       canvas.drawCircle(position, 49, Paint()
-        ..color = const Color(0xFF6F8A62).withOpacity(0.26)
+        ..color = const Color(0xFF6F8A62).withValues(alpha: 0.26)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2);
-      canvas.drawCircle(position, 33, Paint()..color = const Color(0xFFEDE8D8).withOpacity(0.95));
+      canvas.drawCircle(position, 33, Paint()..color = const Color(0xFFEDE8D8).withValues(alpha: 0.95));
       final plusPaint = Paint()
         ..color = const Color(0xFF567348)
         ..strokeWidth = 4
@@ -1182,20 +1191,20 @@ class BattleGame extends FlameGame {
 
   void _drawSanctuaries(Canvas canvas) {
     for (final position in _sanctuaryPositions) {
-      canvas.drawCircle(position, 80, Paint()..color = const Color(0xFFF3E9CE).withOpacity(0.20));
+      canvas.drawCircle(position, 80, Paint()..color = const Color(0xFFF3E9CE).withValues(alpha: 0.20));
       _drawDashedCircle(canvas, position, 80, Paint()
-        ..color = const Color(0xFFE7D9B5).withOpacity(0.68)
+        ..color = const Color(0xFFE7D9B5).withValues(alpha: 0.68)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.5);
-      canvas.drawCircle(position, 47, Paint()..color = const Color(0xFFE9DFC8).withOpacity(0.18));
+      canvas.drawCircle(position, 47, Paint()..color = const Color(0xFFE9DFC8).withValues(alpha: 0.18));
     }
   }
 
   void _drawLightningMarker(Canvas canvas) {
     final pulse = 0.45 + 0.3 * math.sin(_elapsed * 18).abs();
-    canvas.drawCircle(_lightningTarget, 90, Paint()..color = const Color(0xFFD4C8A6).withOpacity(pulse * 0.22));
+    canvas.drawCircle(_lightningTarget, 90, Paint()..color = const Color(0xFFD4C8A6).withValues(alpha: pulse * 0.22));
     canvas.drawCircle(_lightningTarget, 45, Paint()
-      ..color = const Color(0xFFEBD79E).withOpacity(pulse * 0.62)
+      ..color = const Color(0xFFEBD79E).withValues(alpha: pulse * 0.62)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3);
   }
@@ -1203,7 +1212,7 @@ class BattleGame extends FlameGame {
   void _drawCache(Canvas canvas, SupplyCache cache) {
     final bob = math.sin(_elapsed * 3 + cache.position.dx) * 3;
     final center = cache.position + Offset(0, bob);
-    canvas.drawCircle(center, 25, Paint()..color = const Color(0xFFDFAD62).withOpacity(0.14));
+    canvas.drawCircle(center, 25, Paint()..color = const Color(0xFFDFAD62).withValues(alpha: 0.14));
     canvas.drawRRect(
       RRect.fromRectAndRadius(Rect.fromCenter(center: center, width: 27, height: 21), const Radius.circular(5)),
       Paint()..color = const Color(0xFF815335),
@@ -1216,7 +1225,7 @@ class BattleGame extends FlameGame {
   }
 
   void _drawProjectile(Canvas canvas, Projectile projectile) {
-    canvas.drawCircle(projectile.position, 12, Paint()..color = projectile.color.withOpacity(0.15));
+    canvas.drawCircle(projectile.position, 12, Paint()..color = projectile.color.withValues(alpha: 0.15));
     canvas.drawCircle(projectile.position, 6, Paint()..color = projectile.color);
     canvas.drawCircle(projectile.position, 2.5, Paint()..color = const Color(0xFFFFE0A8));
   }
@@ -1225,7 +1234,7 @@ class BattleGame extends FlameGame {
     canvas.save();
     canvas.translate(fighter.position.dx, fighter.position.dy);
     canvas.rotate(fighter.facing);
-    final shadow = Paint()..color = Colors.black.withOpacity(0.16);
+    final shadow = Paint()..color = Colors.black.withValues(alpha: 0.16);
     canvas.drawOval(Rect.fromCenter(center: Offset(0, fighter.radius * 0.8), width: fighter.radius * 2.4, height: fighter.radius * 0.9), shadow);
     final flash = fighter.hitFlash > 0 ? Color.lerp(fighter.color, const Color(0xFFFFEBD0), 0.68) ?? fighter.color : fighter.color;
     final bodyPaint = Paint()..color = flash;
@@ -1249,7 +1258,7 @@ class BattleGame extends FlameGame {
         ..strokeCap = StrokeCap.round);
       if (_playerInvulnerability > 0) {
         canvas.drawCircle(Offset.zero, fighter.radius + 8, Paint()
-          ..color = const Color(0xFFFFE3B5).withOpacity(0.35)
+          ..color = const Color(0xFFFFE3B5).withValues(alpha: 0.35)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2);
       }
@@ -1264,7 +1273,7 @@ class BattleGame extends FlameGame {
       canvas.translate(fighter.position.dx, fighter.position.dy);
       canvas.rotate(fighter.facing);
       canvas.drawArc(Rect.fromCircle(center: Offset.zero, radius: fighter.range), -arc / 2, arc, false, Paint()
-        ..color = (fighter.isPlayer ? const Color(0xFFFFD18E) : fighter.color).withOpacity(opacity)
+        ..color = (fighter.isPlayer ? const Color(0xFFFFD18E) : fighter.color).withValues(alpha: opacity)
         ..style = PaintingStyle.stroke
         ..strokeWidth = fighter.isPlayer ? 5 : 3);
       canvas.restore();
@@ -1332,12 +1341,12 @@ class BattleGame extends FlameGame {
     }
     if (fighter.isEliteBoss) {
       canvas.drawCircle(Offset.zero, radius + 4 + (_bossEnrageFlash > 0 ? 8 : 0), Paint()
-        ..color = fighter.color.withOpacity(0.25)
+        ..color = fighter.color.withValues(alpha: 0.25)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3);
       if (_bossTelegraph > 0) {
         canvas.drawCircle(Offset.zero, radius + 18 + 8 * math.sin(_elapsed * 16).abs(), Paint()
-          ..color = const Color(0xFFE2C38B).withOpacity(0.48)
+          ..color = const Color(0xFFE2C38B).withValues(alpha: 0.48)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 3);
       }
@@ -1347,7 +1356,7 @@ class BattleGame extends FlameGame {
   void _drawHealthBar(Canvas canvas, Fighter fighter) {
     final width = fighter.radius * 2.3;
     final rect = Rect.fromCenter(center: fighter.position - Offset(0, fighter.radius + 12), width: width, height: 4);
-    canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(4)), Paint()..color = const Color(0xFF201E1A).withOpacity(0.55));
+    canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(4)), Paint()..color = const Color(0xFF201E1A).withValues(alpha: 0.55));
     final fill = Rect.fromLTWH(rect.left, rect.top, rect.width * (fighter.hp / fighter.maxHp).clamp(0, 1).toDouble(), rect.height);
     canvas.drawRRect(RRect.fromRectAndRadius(fill, const Radius.circular(4)), Paint()..color = const Color(0xFFBD493A));
   }
@@ -1355,7 +1364,7 @@ class BattleGame extends FlameGame {
   void _drawBossHealth(Canvas canvas, Fighter boss) {
     final width = boss.isEliteBoss ? 120.0 : 82.0;
     final rect = Rect.fromCenter(center: boss.position - Offset(0, boss.radius + 17), width: width, height: 7);
-    canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(8)), Paint()..color = const Color(0xFF201E1A).withOpacity(0.8));
+    canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(8)), Paint()..color = const Color(0xFF201E1A).withValues(alpha: 0.8));
     canvas.drawRRect(
       RRect.fromRectAndRadius(Rect.fromLTWH(rect.left, rect.top, rect.width * (boss.hp / boss.maxHp).clamp(0, 1).toDouble(), rect.height), const Radius.circular(8)),
       Paint()..color = const Color(0xFFD5A45B),

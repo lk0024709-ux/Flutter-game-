@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../domain/game_models.dart';
+import '../scene3d/cube_scene_preview.dart';
 import '../state/game_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/premium_widgets.dart';
@@ -40,7 +41,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
-                    colors: [const Color(0xFFE7C38D).withOpacity(0.3), Colors.transparent],
+                    colors: [const Color(0xFFE7C38D).withValues(alpha: 0.3), Colors.transparent],
                   ),
                 ),
               ),
@@ -73,7 +74,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
                           child: Text(
                             state.hasRannslayerTitle ? 'RANNSLAYER  ·  ETERNAL CHAMPION' : 'THE ARENA REMEMBERS EVERY BLADE',
                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  color: AppColors.textMuted.withOpacity(0.75),
+                                  color: AppColors.textMuted.withValues(alpha: 0.75),
                                   letterSpacing: 1.25,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -145,16 +146,20 @@ class _ForgeScreenState extends State<ForgeScreen> {
           end: Alignment.bottomRight,
           colors: [Color(0xFF6D4C32), Color(0xFF3C332A)],
         ),
-        boxShadow: [BoxShadow(color: const Color(0xFF4A3826).withOpacity(0.17), blurRadius: 24, offset: const Offset(0, 9))],
+        boxShadow: [BoxShadow(color: const Color(0xFF4A3826).withValues(alpha: 0.17), blurRadius: 24, offset: const Offset(0, 9))],
       ),
       child: Stack(
         children: [
           Positioned(
-            right: 12,
-            top: -22,
-            child: Transform.rotate(
-              angle: -0.23,
-              child: Text(weapon.icon, style: const TextStyle(fontSize: 112, color: Color(0x55FFFFFF))),
+            right: 7,
+            top: 5,
+            bottom: 5,
+            width: 122,
+            child: IgnorePointer(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: const CubeScenePreview(),
+              ),
             ),
           ),
           Padding(
@@ -166,7 +171,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(color: Colors.white.withOpacity(0.13), borderRadius: BorderRadius.circular(999)),
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.13), borderRadius: BorderRadius.circular(999)),
                       child: const Text('CAMPAIGN  ·  350 LEVELS', style: TextStyle(color: Color(0xFFF5E9D3), fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1)),
                     ),
                     const Spacer(),
@@ -201,7 +206,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
                       tooltip: 'Open the store',
                       onPressed: () => _push(StoreScreen(state: state)),
                       style: IconButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.12),
+                        backgroundColor: Colors.white.withValues(alpha: 0.12),
                         foregroundColor: Colors.white,
                         fixedSize: const Size(48, 48),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
@@ -349,7 +354,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
           Container(
             width: 52,
             height: 52,
-            decoration: BoxDecoration(color: tier.accent.withOpacity(0.12), borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(color: tier.accent.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(16)),
             child: Center(child: Text(tier.icon, style: const TextStyle(fontSize: 25))),
           ),
           const SizedBox(width: 13),
@@ -364,7 +369,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
               ],
             ),
           ),
-          Icon(Icons.arrow_forward_rounded, color: AppColors.textMuted.withOpacity(0.7)),
+          Icon(Icons.arrow_forward_rounded, color: AppColors.textMuted.withValues(alpha: 0.7)),
         ],
       ),
     );
@@ -440,8 +445,8 @@ class _ForgeSlot extends StatelessWidget {
   Widget build(BuildContext context) {
     final isEmpty = tier == null;
     final weapon = isEmpty ? null : WeaponTierData.fromLevel(tier!);
-    final background = isEmpty ? const Color(0xFFF6F3ED) : weapon!.accent.withOpacity(0.10);
-    final outline = active ? AppColors.primary : (isEmpty ? const Color(0xFFE8E3D8) : weapon!.accent.withOpacity(0.28));
+    final background = isEmpty ? const Color(0xFFF6F3ED) : weapon!.accent.withValues(alpha: 0.10);
+    final outline = active ? AppColors.primary : (isEmpty ? const Color(0xFFE8E3D8) : weapon!.accent.withValues(alpha: 0.28));
     final content = AnimatedContainer(
       duration: const Duration(milliseconds: 220),
       decoration: BoxDecoration(

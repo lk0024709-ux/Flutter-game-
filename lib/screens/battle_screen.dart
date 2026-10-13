@@ -197,7 +197,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
                 decoration: BoxDecoration(
-                  color: _isElite ? AppColors.darkSurface.withOpacity(0.92) : AppColors.surface.withOpacity(0.94),
+                  color: _isElite ? AppColors.darkSurface.withValues(alpha: 0.92) : AppColors.surface.withValues(alpha: 0.94),
                   borderRadius: BorderRadius.circular(999),
                   border: Border.all(color: _isElite ? AppColors.darkBorder : AppColors.border),
                 ),
@@ -240,7 +240,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
               child: Container(
                 padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
                 decoration: BoxDecoration(
-                  color: _isElite ? AppColors.darkSurface.withOpacity(0.94) : AppColors.surface.withOpacity(0.95),
+                  color: _isElite ? AppColors.darkSurface.withValues(alpha: 0.94) : AppColors.surface.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: _isElite ? AppColors.darkBorder : AppColors.border),
                 ),
@@ -299,7 +299,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 10),
                 decoration: BoxDecoration(
-                  color: _isElite ? AppColors.darkSurface.withOpacity(0.94) : AppColors.surface.withOpacity(0.95),
+                  color: _isElite ? AppColors.darkSurface.withValues(alpha: 0.94) : AppColors.surface.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: _isElite ? AppColors.darkBorder : AppColors.border),
                 ),
@@ -325,7 +325,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
         final ratio = hud.bossMaxHp <= 0 ? 0.0 : (hud.bossHp / hud.bossMaxHp).clamp(0, 1).toDouble();
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
-          decoration: BoxDecoration(color: AppColors.darkSurface.withOpacity(0.92), borderRadius: BorderRadius.circular(15), border: Border.all(color: AppColors.darkBorder)),
+          decoration: BoxDecoration(color: AppColors.darkSurface.withValues(alpha: 0.92), borderRadius: BorderRadius.circular(15), border: Border.all(color: AppColors.darkBorder)),
           child: Column(
             children: [
               Row(
@@ -428,7 +428,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
   Widget _buildPauseOverlay() {
     return Positioned.fill(
       child: Container(
-        color: Colors.black.withOpacity(0.40),
+        color: Colors.black.withValues(alpha: 0.40),
         child: Center(
           child: SurfaceCard(
             color: _isElite ? AppColors.darkSurface : AppColors.surface,
@@ -441,7 +441,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
                   Container(
                     width: 54,
                     height: 54,
-                    decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.13), borderRadius: BorderRadius.circular(17)),
+                    decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.13), borderRadius: BorderRadius.circular(17)),
                     child: const Icon(Icons.pause_rounded, color: AppColors.primaryDark, size: 26),
                   ),
                   const SizedBox(height: 13),
@@ -474,7 +474,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
 
     return Positioned.fill(
       child: Container(
-        color: Colors.black.withOpacity(0.48),
+        color: Colors.black.withValues(alpha: 0.48),
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
@@ -490,7 +490,7 @@ class _BattleScreenState extends State<BattleScreen> with SingleTickerProviderSt
                     Container(
                       width: 50,
                       height: 50,
-                      decoration: BoxDecoration(color: (success ? AppColors.secondary : AppColors.accent).withOpacity(0.12), borderRadius: BorderRadius.circular(16)),
+                      decoration: BoxDecoration(color: (success ? AppColors.secondary : AppColors.accent).withValues(alpha: 0.12), borderRadius: BorderRadius.circular(16)),
                       child: Center(child: Text(success ? (_isElite ? '🐲' : '🏆') : '🛡️', style: const TextStyle(fontSize: 23))),
                     ),
                     const SizedBox(height: 10),
@@ -645,7 +645,7 @@ class _ScoreRow extends StatelessWidget {
             width: 28,
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 4),
-            decoration: BoxDecoration(color: grade.color.withOpacity(0.13), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: grade.color.withValues(alpha: 0.13), borderRadius: BorderRadius.circular(8)),
             child: Text(grade.label, style: TextStyle(color: grade.color, fontSize: 10, fontWeight: FontWeight.w800)),
           ),
         ],
@@ -671,7 +671,7 @@ class _HudButton extends StatelessWidget {
         constraints: const BoxConstraints(minWidth: 49),
         padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
         decoration: BoxDecoration(
-          color: elite ? AppColors.darkSurface.withOpacity(0.94) : AppColors.surface.withOpacity(0.95),
+          color: elite ? AppColors.darkSurface.withValues(alpha: 0.94) : AppColors.surface.withValues(alpha: 0.95),
           borderRadius: BorderRadius.circular(13),
           border: Border.all(color: elite ? AppColors.darkBorder : AppColors.border),
         ),
@@ -701,7 +701,7 @@ class _PowerPill extends StatelessWidget {
     final color = danger ? const Color(0xFFB85545) : AppColors.secondary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(color: color.withOpacity(dark ? 0.17 : 0.1), borderRadius: BorderRadius.circular(999)),
+      decoration: BoxDecoration(color: color.withValues(alpha: dark ? 0.17 : 0.1), borderRadius: BorderRadius.circular(999)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -728,9 +728,9 @@ class _AttackButton extends StatelessWidget {
         height: 86,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: const Color(0xFFE7AA54).withOpacity(0.94),
+          color: const Color(0xFFE7AA54).withValues(alpha: 0.94),
           border: Border.all(color: const Color(0xFFFFE4B4), width: 3),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.20), blurRadius: 18, offset: const Offset(0, 5))],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.20), blurRadius: 18, offset: const Offset(0, 5))],
         ),
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -797,23 +797,23 @@ class _JoystickPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     const center = Offset(79, 79);
-    canvas.drawCircle(center, 59, Paint()..color = (dark ? AppColors.darkSurface : AppColors.surface).withOpacity(0.72));
+    canvas.drawCircle(center, 59, Paint()..color = (dark ? AppColors.darkSurface : AppColors.surface).withValues(alpha: 0.72));
     canvas.drawCircle(center, 59, Paint()
-      ..color = (dark ? AppColors.darkBorder : AppColors.border).withOpacity(0.95)
+      ..color = (dark ? AppColors.darkBorder : AppColors.border).withValues(alpha: 0.95)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2);
     for (var i = 0; i < 4; i++) {
       final angle = i * 1.5708;
       final spot = center + Offset.fromDirection(angle, 41);
-      canvas.drawCircle(spot, 2.5, Paint()..color = (dark ? AppColors.darkMuted : AppColors.textMuted).withOpacity(0.3));
+      canvas.drawCircle(spot, 2.5, Paint()..color = (dark ? AppColors.darkMuted : AppColors.textMuted).withValues(alpha: 0.3));
     }
     final knob = center + value * 37;
-    canvas.drawCircle(knob, 23, Paint()..color = const Color(0xFFD9973F).withOpacity(0.95));
+    canvas.drawCircle(knob, 23, Paint()..color = const Color(0xFFD9973F).withValues(alpha: 0.95));
     canvas.drawCircle(knob, 23, Paint()
       ..color = const Color(0xFFFFE4B4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2);
-    canvas.drawCircle(knob + const Offset(-6, -6), 3, Paint()..color = Colors.white.withOpacity(0.7));
+    canvas.drawCircle(knob + const Offset(-6, -6), 3, Paint()..color = Colors.white.withValues(alpha: 0.7));
   }
 
   @override

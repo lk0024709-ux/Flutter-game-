@@ -35,7 +35,7 @@ class SurfaceCard extends StatelessWidget {
       color: color ?? (isDark ? AppColors.darkSurface : AppColors.surface),
       shape: shape,
       elevation: shadow && !isDark ? 3 : 0,
-      shadowColor: Colors.black.withOpacity(0.08),
+      shadowColor: Colors.black.withValues(alpha: 0.08),
       child: InkWell(
         onTap: onTap,
         customBorder: shape,
@@ -202,7 +202,7 @@ class StatChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        color: (color ?? AppColors.surfaceAlt).withOpacity(0.6),
+        color: (color ?? AppColors.surfaceAlt).withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(

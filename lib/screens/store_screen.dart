@@ -282,7 +282,7 @@ class _ArmorCard extends StatelessWidget {
           Container(
             width: 55,
             height: 55,
-            decoration: BoxDecoration(color: armor.color.withOpacity(0.15), borderRadius: BorderRadius.circular(17)),
+            decoration: BoxDecoration(color: armor.color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(17)),
             child: Center(child: Text(armor.icon, style: const TextStyle(fontSize: 27))),
           ),
           const SizedBox(width: 13),
@@ -341,7 +341,7 @@ class _BoosterCard extends StatelessWidget {
     final hasAny = count > 0;
     return SurfaceCard(
       padding: const EdgeInsets.all(13),
-      borderColor: selected ? AppColors.primary.withOpacity(0.55) : null,
+      borderColor: selected ? AppColors.primary.withValues(alpha: 0.55) : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

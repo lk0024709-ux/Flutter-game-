@@ -166,15 +166,15 @@ class _CampaignScreenState extends State<CampaignScreen> {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        color: map.ground.withOpacity(0.5),
-        border: Border.all(color: map.accent.withOpacity(0.24)),
+        color: map.ground.withValues(alpha: 0.5),
+        border: Border.all(color: map.accent.withValues(alpha: 0.24)),
       ),
       child: Row(
         children: [
           Container(
             width: 56,
             height: 56,
-            decoration: BoxDecoration(color: map.accent.withOpacity(0.17), borderRadius: BorderRadius.circular(18)),
+            decoration: BoxDecoration(color: map.accent.withValues(alpha: 0.17), borderRadius: BorderRadius.circular(18)),
             child: Center(child: Text(_selectedRank.icon, style: const TextStyle(fontSize: 26))),
           ),
           const SizedBox(width: 14),
@@ -186,7 +186,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                 const SizedBox(height: 4),
                 Text(map.title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 19)),
                 const SizedBox(height: 3),
-                Text(map.twist, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textPrimary.withOpacity(0.73))),
+                Text(map.twist, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.73))),
               ],
             ),
           ),
@@ -296,7 +296,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                     Container(
                       width: 52,
                       height: 52,
-                      decoration: BoxDecoration(color: level.rank.color.withOpacity(0.12), borderRadius: BorderRadius.circular(16)),
+                      decoration: BoxDecoration(color: level.rank.color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(16)),
                       child: Center(child: Text(level.isRankBoss ? '👑' : level.rank.icon, style: const TextStyle(fontSize: 24))),
                     ),
                     const SizedBox(width: 13),
@@ -429,7 +429,7 @@ class _LevelTile extends StatelessWidget {
           color: isBoss ? const Color(0xFFD5A949) : current ? AppColors.primary : AppColors.border,
           width: isBoss || current ? 1.8 : 1,
         ),
-        boxShadow: current ? [BoxShadow(color: AppColors.primary.withOpacity(0.16), blurRadius: 12, offset: const Offset(0, 3))] : null,
+        boxShadow: current ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.16), blurRadius: 12, offset: const Offset(0, 3))] : null,
       ),
       child: InkWell(
         onTap: onTap,
