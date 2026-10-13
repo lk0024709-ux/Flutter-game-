@@ -13,5 +13,5 @@ enum WeaponTier {
   final double reach;
   final double cooldown;
   final String label;
-  WeaponTier get next => WeaponTier.values[(index + 1).clamp(0, WeaponTier.values.length - 1)];
+  WeaponTier get next => WeaponTier.values[index < WeaponTier.values.length - 1 ? index + 1 : index];
 }
