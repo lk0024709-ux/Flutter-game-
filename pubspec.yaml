@@ -1,5 +1,5 @@
 name: blade_brawl
-description: Blade Brawl: Rannbhoomi - a premium top-down arena brawler.
+description: "Blade Brawl: Rannbhoomi - a premium top-down arena brawler."
 publish_to: "none"
 version: 0.1.0+1
 environment:
