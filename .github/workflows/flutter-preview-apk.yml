@@ -1,0 +1,82 @@
+name: Flutter 3D Preview & APK Build
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java (APK ke liye)
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Enable native assets
+        run: flutter config --enable-native-assets
+
+      - name: Generate Android runner
+        run: flutter create --no-pub --platforms=android --org=com.bosm --project-name=battle_of_sword_master .
+
+      - name: Enable Flutter GPU and apply app label
+        run: |
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          path = Path("android/app/src/main/AndroidManifest.xml")
+          android = "http://schemas.android.com/apk/res/android"
+          ET.register_namespace("android", android)
+          tree = ET.parse(path)
+          application = tree.getroot().find("application")
+          if application is None:
+              raise SystemExit("AndroidManifest.xml is missing <application>")
+          application.set(f"{{{android}}}label", "Battle of Sword Master")
+          key = "io.flutter.embedding.android.EnableFlutterGPU"
+          metadata = next(
+              (node for node in application.findall("meta-data")
+               if node.get(f"{{{android}}}name") == key),
+              None,
+          )
+          if metadata is None:
+              metadata = ET.SubElement(application, "meta-data")
+          metadata.set(f"{{{android}}}name", key)
+          metadata.set(f"{{{android}}}value", "true")
+          ET.indent(tree, space="    ")
+          tree.write(path, encoding="utf-8", xml_declaration=True)
+          PY
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web for Preview
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+
+      - name: Deploy Live Preview to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
