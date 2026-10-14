@@ -1,0 +1,96 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+      - "arena/**"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flutter-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Resolve, analyze, test, and build Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter master
+        uses: subosito/flutter-action@v2
+        with:
+          # Omit flutter-version so the action selects the latest master commit.
+          channel: master
+          cache: true
+
+      - name: Enable native assets
+        run: flutter config --enable-native-assets
+
+      - name: Generate the Android runner
+        run: flutter create --no-pub --platforms=android --org=com.bosm --project-name=battle_of_sword_master .
+
+      - name: Enable Flutter GPU and apply app label
+        run: |
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          path = Path("android/app/src/main/AndroidManifest.xml")
+          android = "http://schemas.android.com/apk/res/android"
+          ET.register_namespace("android", android)
+          tree = ET.parse(path)
+          application = tree.getroot().find("application")
+          if application is None:
+              raise SystemExit("AndroidManifest.xml is missing <application>")
+          application.set(f"{{{android}}}label", "Battle of Sword Master")
+          key = "io.flutter.embedding.android.EnableFlutterGPU"
+          metadata = next(
+              (node for node in application.findall("meta-data")
+               if node.get(f"{{{android}}}name") == key),
+              None,
+          )
+          if metadata is None:
+              metadata = ET.SubElement(application, "meta-data")
+          metadata.set(f"{{{android}}}name", key)
+          metadata.set(f"{{{android}}}value", "true")
+          ET.indent(tree, space="    ")
+          tree.write(path, encoding="utf-8", xml_declaration=True)
+          PY
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        shell: bash
+        run: |
+          set +e
+          output_file="$(mktemp)"
+          flutter analyze 2>&1 | tee "$output_file"
+          analysis_status=${PIPESTATUS[0]}
+          if [ "$analysis_status" -ne 0 ]; then
+            while IFS= read -r issue; do
+              printf '::error title=flutter analyze::%s\n' "$issue"
+            done < "$output_file"
+          fi
+          rm -f "$output_file"
+          exit "$analysis_status"
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build debug APK
+        run: flutter build apk --debug
